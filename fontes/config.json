@@ -1,0 +1,10 @@
+{
+  "fonte": "windows",
+  "so_spotify_no_windows": true,
+  "porta_minecraft": 8000,
+  "intervalo_consulta_s": 1.5,
+  "tamanho_pedaco": 380,
+  "intervalo_comandos_ms": 80,
+  "limite_caracteres_linha": 42,
+  "tolerancia_duracao_s": 8
+}
