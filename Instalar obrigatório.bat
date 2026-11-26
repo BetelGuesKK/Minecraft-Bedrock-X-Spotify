@@ -21,7 +21,7 @@ if not defined PY (
   pause
   exit /b 1
 )
-echo Instalando os pacotes...
+echo Instalando os pacotes que leem o Spotify do Windows...
 %PY% -m pip install winrt-runtime winrt-Windows.Media.Control winrt-Windows.Foundation winrt-Windows.Foundation.Collections winrt-Windows.Storage.Streams
 if errorlevel 1 (
   echo.
@@ -31,6 +31,6 @@ if errorlevel 1 (
 )
 echo.
 echo ==================================================
-echo  PRONTO! abra "Iniciar Spotify".
+echo  PRONTO! Agora use o "Iniciar Spotify".
 echo ==================================================
 pause

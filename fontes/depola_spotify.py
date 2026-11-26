@@ -280,7 +280,7 @@ class Companion:
         if self.conn and not self.conn.closed:
             self.conn.close()
         self.conn = conn
-        self.log("\n>>> Minecraft conectado! Ligue o botão '🎧 Spotify' no menu do item.")
+        self.log("\nConectado! Ative nas opções do item dentro do Minecraft.")
         self.status_queue.append(("hello", "1"))
         if self.cur_status:
             self.status_queue.append((self.cur_status[0], self.cur_status[1]))
@@ -296,7 +296,7 @@ class Companion:
         finally:
             if self.conn is conn:
                 self.conn = None
-            self.log("\n>>> Minecraft desconectou. No jogo, digite /connect de novo para reconectar.")
+            self.log("\nMinecraft desconectado. Cole o comando de novo para reconectar.")
 
     def _on_mc_message(self, text):
         try:
@@ -332,7 +332,7 @@ class Companion:
             disk = self._disk_get(obs["id"])
             if disk:
                 cached = ("ok", disk)
-                self.log("   (letra já estava salva no PC)")
+                pass
         if cached is None:
             cached = await asyncio.get_running_loop().run_in_executor(self.lyr_pool, self.lyrics_fn, obs)
             if cached[0] == "ok":
@@ -350,7 +350,6 @@ class Companion:
             self.data_queue = list(self.cur_chunks)
             self.cur_status = None
             self.pos_dirty = True
-            self.log(f"   letra: {len(data)} linhas ({len(self.cur_chunks)} comandos)")
         elif kind == "instrumental":
             self.log("   instrumental (sem letra)")
             self._queue_status("nolyrics", b64u(("♪ " + obs["title"] + " (instrumental)").encode("utf-8"))[:300])
@@ -365,7 +364,6 @@ class Companion:
         m = self.model
         if obs is None:
             if m.track is not None:
-                self.log("\n(nada tocando)")
                 m.track = None
                 self.cur_tid = None
                 self.cur_chunks = None
@@ -378,7 +376,6 @@ class Companion:
         if obs["playing"] != m.playing:
             m.anchor(obs["position_ms"], obs["playing"])
             self.pos_dirty = True
-            self.log("   ▶ continuou" if obs["playing"] else "   ⏸ pausou")
             return
         expected = m.position()
         drift = obs["position_ms"] - expected
@@ -386,7 +383,6 @@ class Companion:
             if abs(drift) > self.SEEK_MS:
                 m.anchor(obs["position_ms"], True)
                 self.pos_dirty = True
-                self.log(f"   ⇆ pulou para {obs['position_ms'] / 1000:.1f}s")
             else:
                 m.anchor(expected + drift * self.SOFT, True)   # correção suave, sem ressincronizar no jogo
         elif abs(drift) > 300:
@@ -420,11 +416,9 @@ class Companion:
         cmd = f"/connect 127.0.0.1:{port}"
         copied = copy_to_clipboard(cmd)
         self.log("\n==================================================")
-        self.log(" Companheiro pronto. NO MINECRAFT, digite no chat:")
+        self.log(" Companheiro pronto!")
         self.log(f"      {cmd}")
-        if copied:
-            self.log(" (já copiei para você: abra o chat e aperte Ctrl+V)")
-        self.log(" (o mundo precisa estar com cheats/trapaças ligados)")
+        self.log(" Comando na sua área de transferência, cole no Minecraft." if copied else " Digite esse comando no Minecraft.")
         self.log("==================================================\n")
         async with server:
             await asyncio.gather(self.poll_loop(), self.sender_loop())

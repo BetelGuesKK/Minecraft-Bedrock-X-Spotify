@@ -250,7 +250,6 @@ class WindowsFonte:
         self._M = M
         self.loop = asyncio.new_event_loop()
         self.mgr = self.loop.run_until_complete(M.request_async())
-        print("Fonte Windows: pronta.")
 
     def _pick(self):
         sessions = list(self.mgr.get_sessions())
